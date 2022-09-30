@@ -12,33 +12,27 @@
 
 const char* vsrc = GET_GLSTR(
     layout(location = 0) in vec3 aPos;
+	layout(location = 1) in vec3 aColor;
+	out vec3 ourColor;
 void main(void)
 {
-    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+	gl_Position = vec4(aPos, 1.0);
+	ourColor = aColor;
 }
 );
 
 const char* fsrc = GET_GLSTR(
-    out vec4 FragColor;
-uniform vec4 ourColor; // 在OpenGL程序代码中设定这个变量
+	out vec4 FragColor;
+	in vec3 ourColor;
 void main(void)
 {
-    FragColor = vec4(1.0f, 1.0f, 0.0f, 1.0f);
+	FragColor = vec4(ourColor, 1.0);
 }
 );
 
-//fsrc 等价于 -->   const char *fsrc ="#version 330 core\n"
-//                      "out vec4 FragColor;\n"
-//                      "void main()\n"
-//                      "{\n"
-//                      "   FragColor = vec4(1.0f, 1.0f, 0.0f, 1.0f);\n"
-//                      "}\n\0";
-
 myGlWidget::myGlWidget(QWidget* parent) :QOpenGLWidget(parent)
 {
-
 }
-
 
 void myGlWidget::paintGL()
 {
@@ -48,11 +42,11 @@ void myGlWidget::paintGL()
     glClear(GL_COLOR_BUFFER_BIT);
 
     // 渲染Shader
-    program->bind(); //绑定激活Program对象
+    //program->bind(); //绑定激活Program对象
     vao.bind();      //绑定激活vao
     glDrawArrays(GL_TRIANGLES, 0, 3);    //绘制3个定点,样式为三角形
     vao.release();       //解绑
-    program->release();  //解绑
+    //program->release();  //解绑
 
 }
 void myGlWidget::initializeGL()
@@ -63,52 +57,48 @@ void myGlWidget::initializeGL()
 
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);    //设置背景色为白色
 
-    //1.创建顶点着色器
-    QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex, this);
-    vshader->compileSourceCode(vsrc);
 
-    //2.创建片元着色器 rgba(1.0f, 1.0f, 0.0f, 1.0f)表示黄色,而alpha值为1.0,表示完全不透明
-    QOpenGLShader* fshader = new QOpenGLShader(QOpenGLShader::Fragment, this);
-    fshader->compileSourceCode(fsrc);
-
-    //3.创建着色器程序
-    program = new QOpenGLShaderProgram;
-    program->addShader(vshader);
-    program->addShader(fshader);
-    program->link();
-    program->bind();//激活Program对象
+	//1.创建着色器程序
+	program = new QOpenGLShaderProgram;
+	program->addShaderFromSourceCode(QOpenGLShader::Vertex, vsrc);
+	program->addShaderFromSourceCode(QOpenGLShader::Fragment, fsrc);
+	program->link();
+	program->bind();//激活Program对象
 
 
-    //4.初始化VBO,将顶点数据存储到buffer中,等待VAO激活后才能释放
-    float vertices[] = {
-    -0.5f, -0.5f, 0.0f,
-    0.5f, -0.5f, 0.0f,
-    0.0f, 0.5f, 0.0f
-    };
+	//2.初始化VBO,将顶点数据存储到buffer中,等待VAO激活后才能释放
+	float vertices[] = {
+		// 位置              // 颜色
+		0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // 右下 颜色对应红色(1.0f, 0.0f, 0.0f)
+		-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // 左下 颜色对应绿色
+		0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f // 顶部 颜色对应蓝色
+	};
 
-    vbo.create();
-    vbo.bind();              //绑定到当前的OpenGL上下文,
-    vbo.allocate(vertices, 9 * sizeof(GLfloat));
-    vbo.setUsagePattern(QOpenGLBuffer::StreamDraw);  //设置为一次修改，多次使用
-
-
-    //5.初始化VAO,设置顶点数据状态(顶点，法线，纹理坐标等)
-    vao.create();
-    vao.bind();
-
-    GLint aPos = program->attributeLocation("aPos");        //获取aPos位置
-    if (aPos == -1)  //未找到
-    {
-        return;
-    }
-    program->setAttributeBuffer(aPos, GL_FLOAT, 0, 3, 0);   //设置顶点属性
-    program->enableAttributeArray(aPos); //使能顶点属性
+	vbo.create();
+	vbo.bind(); //绑定到当前的OpenGL上下文,
+	vbo.allocate(vertices, 18 * sizeof(GLfloat));
+	vbo.setUsagePattern(QOpenGLBuffer::StaticDraw); //设置为一次修改，多次使用
 
 
-    //6.解绑所有对象
-    vao.release();
-    vbo.release();
-    program->release();
+	//3.初始化VAO,设置顶点数据状态(顶点，法线，纹理坐标等)
+	vao.create();
+	vao.bind();
+
+	// void setAttributeBuffer(int location, GLenum type, int offset, int tupleSize, int stride = 0);
+	program->setAttributeBuffer(0, GL_FLOAT, 0, 3, 6 * sizeof(float)); //设置aPos顶点属性
+	program->setAttributeBuffer(1, GL_FLOAT, 3 * sizeof(float), 3, 6 * sizeof(float)); //设置aColor顶点颜色
+	//offset:第一个数据的偏移量
+	//tupleSize:一个数据有多少个元素,比如位置为xyz,颜色为rgb,所以是3
+	//stride:步长,下个数据距离当前数据的之间距离,比如右下位置和左下位置之间间隔了:3个xyz值+3个rgb值,所以填入 6 * sizeof(float)
+
+
+	program->enableAttributeArray(0); //使能aPos顶点属性
+	program->enableAttributeArray(1); //使能aColor顶点颜色
+
+
+	//4.解绑所有对象
+	vao.release();
+	vbo.release();
 
 
 }
