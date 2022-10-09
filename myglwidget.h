@@ -9,6 +9,8 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLBuffer>
 #include <QOpenGLVertexArrayObject>
+#include <QOpenGLTexture> 
+
 class myGlWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
 	Q_OBJECT
@@ -27,6 +29,7 @@ private:
 
 	QOpenGLVertexArrayObject vao;
 	QOpenGLBuffer vbo;
+	QOpenGLTexture* m_texture = nullptr;
 
 };
 
