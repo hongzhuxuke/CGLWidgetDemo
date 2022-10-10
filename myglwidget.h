@@ -30,6 +30,7 @@ private:
 	QOpenGLVertexArrayObject vao;
 	QOpenGLBuffer vbo;
 	QOpenGLTexture* m_texture = nullptr;
+	QOpenGLTexture* m_texture2 = nullptr;
 
 };
 
