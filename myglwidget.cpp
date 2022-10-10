@@ -75,6 +75,7 @@ void myGlWidget::initializeGL()
 
     // 为当前环境初始化OpenGL函数
     initializeOpenGLFunctions();
+	glEnable(GL_DEPTH_TEST);
 
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);    //设置背景色为白色
 
@@ -106,26 +107,40 @@ void myGlWidget::initializeGL()
 
 	//1.创建着色器程序
 	program = new QOpenGLShaderProgram;
-	program->addShaderFromSourceCode(QOpenGLShader::Vertex, vsrc);
-	program->addShaderFromSourceCode(QOpenGLShader::Fragment, fsrc);
-	program->link();
-	program->bind();//激活Program对象
+	//program->addShaderFromSourceCode(QOpenGLShader::Vertex, vsrc);
+	//program->addShaderFromSourceCode(QOpenGLShader::Fragment, fsrc);
+	//program->link();
+	//program->bind();//激活Program对象
 
 
 	//2.初始化VBO,将顶点数据存储到buffer中,等待VAO激活后才能释放
 	float vertices[] = {
 		// 位置               // 颜色               //纹理坐标
-		0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // 右上
-		0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // 右下
-		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // 左下
-		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // 左上
+		1.0f,  1.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // 右上
+		1.0f, -1.0f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // 右下
+		-1.0f, -1.0f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // 左下
+		-1.0f,  1.0f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // 左上
 	};
 
 	vbo.create();
 	vbo.bind(); //绑定到当前的OpenGL上下文,
 	vbo.allocate(vertices, sizeof(vertices));
+
 	vbo.setUsagePattern(QOpenGLBuffer::StaticDraw); //设置为一次修改，多次使用
 
+	//初始化顶点着色器
+	QOpenGLShader* vshader = new QOpenGLShader(QOpenGLShader::Vertex, this);
+	vshader->compileSourceCode(vsrc);//编辑顶点着色器
+	//初始化片段着色器 功能gpu中yuv转换成rgb
+	QOpenGLShader* fshader = new QOpenGLShader(QOpenGLShader::Fragment,this);
+	fshader->compileSourceCode(fsrc);
+
+	program->addShader(vshader);//将顶点着色器添加到程序容器
+	program->addShader(fshader);//将片段着色器添加到程序容器
+
+
+	program->link();//连接所有添入到的着色器程序
+	program->bind();//激活所有连接
 
 	//初始化VAO,设置顶点数据状态(顶点，法线，纹理坐标等)
 	vao.create();

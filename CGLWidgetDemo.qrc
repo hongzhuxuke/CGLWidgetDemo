@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="img">
+    <file>gqj.jpeg</file>
+    <file>bk_login.png</file>
+  </qresource>
+</RCC>
