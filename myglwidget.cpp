@@ -80,31 +80,7 @@ void myGlWidget::initializeGL()
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);    //设置背景色为白色
 
 
-    //初始化纹理对象
-    m_texture = new QOpenGLTexture(QOpenGLTexture::Target2D);
-    m_texture->setData(QImage(":/img/bk_login.png"));
-    m_texture->setMinMagFilters(QOpenGLTexture::LinearMipMapLinear, QOpenGLTexture::Nearest);
-    //设置缩小和放大的方式,缩小图片采用LinearMipMapLinear线性过滤,并使用多级渐远纹理邻近过滤,放大图片采用:Nearest邻近过滤
-    m_texture->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
-    m_texture->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
-
-
-    //初始化纹理对象
-    m_texture2 = new QOpenGLTexture(QOpenGLTexture::Target2D);
-    m_texture2->setData(QImage(":/img/gqj.jpeg").mirrored()); //返回图片的镜像,设置为Y轴反向,因为在opengl的Y坐标中,0.0对应的是图片底部
-
-
-    m_texture2->setMinMagFilters(QOpenGLTexture::LinearMipMapLinear, QOpenGLTexture::Nearest);
-    //设置缩小和放大的方式,缩小图片采用LinearMipMapLinear线性过滤,并使用多级渐远纹理邻近过滤,放大图片采用:Nearest邻近过滤
-
-    m_texture2->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
-    m_texture2->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
-
-
-
-
-
-
+   
 	//1.创建着色器程序
 	program = new QOpenGLShaderProgram;
 	//program->addShaderFromSourceCode(QOpenGLShader::Vertex, vsrc);
@@ -147,7 +123,7 @@ void myGlWidget::initializeGL()
 	vao.bind();
 
 	// void setAttributeBuffer(int location, GLenum type, int offset, int tupleSize, int stride = 0);
-	program->setAttributeBuffer(0, GL_FLOAT, 0, 3, 8 * sizeof(float));   //设置aPos顶点属性
+	program->setAttributeBuffer(0, GL_FLOAT, 0,					3, 8 * sizeof(float));   //设置aPos顶点属性
 	program->setAttributeBuffer(1, GL_FLOAT, 3 * sizeof(float), 3, 8 * sizeof(float));   //设置aColor顶点颜色
 	program->setAttributeBuffer(2, GL_FLOAT, 6 * sizeof(float), 2, 8 * sizeof(float));   //设置aColor顶点颜色
 
@@ -166,6 +142,25 @@ void myGlWidget::initializeGL()
 	vao.release();
 	vbo.release();
 
+	//初始化纹理对象
+	m_texture = new QOpenGLTexture(QOpenGLTexture::Target2D);
+	m_texture->setData(QImage(":/img/bk_login.png"));
+	m_texture->setMinMagFilters(QOpenGLTexture::LinearMipMapLinear, QOpenGLTexture::Nearest);
+	//设置缩小和放大的方式,缩小图片采用LinearMipMapLinear线性过滤,并使用多级渐远纹理邻近过滤,放大图片采用:Nearest邻近过滤
+	m_texture->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
+	m_texture->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
+
+
+	//初始化纹理对象
+	m_texture2 = new QOpenGLTexture(QOpenGLTexture::Target2D);
+	m_texture2->setData(QImage(":/img/gqj.jpeg").mirrored()); //返回图片的镜像,设置为Y轴反向,因为在opengl的Y坐标中,0.0对应的是图片底部
+
+
+	m_texture2->setMinMagFilters(QOpenGLTexture::LinearMipMapLinear, QOpenGLTexture::Nearest);
+	//设置缩小和放大的方式,缩小图片采用LinearMipMapLinear线性过滤,并使用多级渐远纹理邻近过滤,放大图片采用:Nearest邻近过滤
+
+	m_texture2->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
+	m_texture2->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
 }
 void myGlWidget::resizeEvent(QResizeEvent* e)
 {
