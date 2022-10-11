@@ -12,46 +12,38 @@
 #define GET_GLSTR(x) GL_VERSION#x
 
 //顶点着色器源码
-const char* vsrc = GET_GLSTR(
-	attribute vec4 vertexIn;
-	attribute vec2 textureIn;
-	varying vec2 textureOut;
-void main(void)
-{
-	gl_Position = vertexIn;
-	textureOut = textureIn;
-}
-);
+const char* vsrc =
+"attribute vec4 vertexIn; \
+    attribute vec2 textureIn; \
+    varying vec2 textureOut;  \
+    void main(void)           \
+    {                         \
+        gl_Position = vertexIn; \
+        textureOut = textureIn; \
+    }";
 
 const char* fsrc =
-GET_GLSTR(
-#if defined(WIN32) //windows下opengl es 需要加上float
-#ifdef  GL_ES
-	precision mediump float;
-#endif
-#endif // !
-	varying vec2 textureOut;
-	uniform sampler2D tex_y;
-	uniform sampler2D tex_u;
-	uniform sampler2D tex_v;
-void main(void)
-{
-	//mix函数作用是将前两个纹理参数进行融合,
-	//根据第三个参数值来进行线性插值,如果第三个值是0.0，
-	//它会返回第一个输入；如果是1.0，会返回第二个输入值。
-	//0.7表示返回30%的第一个输入颜色和70%的第二个输入颜色。
-    //FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.7);
-	vec3 yuv;
-	vec3 rgb;
-	yuv.x = texture2D(tex_y, textureOut).r;
-	yuv.y = texture2D(tex_u, textureOut).r - 0.5;
-	yuv.z = texture2D(tex_v, textureOut).r - 0.5;
-	rgb = mat3(1,			1,			1,
-		       0,			-0.39465,	2.03211,
-			   1.13983,		-0.58060,	0) * yuv;
-	gl_FragColor = vec4(rgb, 1);
-}
-);
+#if defined(WIN32)        //windows下opengl es 需要加上float这句话
+"#ifdef GL_ES\n"
+"precision mediump float;\n"
+"#endif\n"
+#endif  
+"varying vec2 textureOut; \
+    uniform sampler2D tex_y; \
+    uniform sampler2D tex_u; \
+    uniform sampler2D tex_v; \
+    void main(void) \
+    { \
+        vec3 yuv; \
+        vec3 rgb; \
+        yuv.x = texture2D(tex_y, textureOut).r; \
+        yuv.y = texture2D(tex_u, textureOut).r - 0.5; \
+        yuv.z = texture2D(tex_v, textureOut).r - 0.5; \
+        rgb = mat3( 1,       1,         1, \
+                    0,       -0.39465,  2.03211, \
+                    1.13983, -0.58060,  0) * yuv; \
+        gl_FragColor = vec4(rgb, 1); \
+    }";
 
 myGlWidget::myGlWidget(QWidget* parent) :QOpenGLWidget(parent)
 {
