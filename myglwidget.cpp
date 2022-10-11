@@ -125,12 +125,12 @@ void myGlWidget::initializeGL()
     initializeOpenGLFunctions();
 	glEnable(GL_DEPTH_TEST);
 
-    //glClearColor(1.0f, 1.0f, 1.0f, 1.0f);    //设置背景色为白色
-	glClearColor(0.0, 0.0, 0.0, 0.0);//设置背景为黑色
+  
+	
 
 	//2.初始化VBO,将顶点数据存储到buffer中,等待VAO激活后才能释放
-	static float vertices[] = {
-		// 位置          
+	static const GLfloat vertices[]{
+		// 位置顶点坐标          
 		-1.0f,  -1.0f,   
 		-1.0f, 1.0f,     
 		1.0f, 1.0f,		 
