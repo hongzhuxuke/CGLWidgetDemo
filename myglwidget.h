@@ -17,6 +17,9 @@ class myGlWidget : public QOpenGLWidget, protected QOpenGLFunctions
 public:
 
 	myGlWidget(QWidget* parent = nullptr);
+	~myGlWidget();
+public slots:
+	void slotShowYuv(uchar* ptr, uint width, uint height); //显示一帧Yuv图像
 protected:
 
 	void paintGL();
@@ -32,6 +35,11 @@ private:
 	QOpenGLTexture* m_texture = nullptr;
 	QOpenGLTexture* m_texture2 = nullptr;
 
+	GLuint textureUniformY, textureUniformU, textureUniformV;     //opengl中y、u、v分量位置
+	QOpenGLTexture* textureY = nullptr, * textureU = nullptr, * textureV = nullptr;
+	GLuint idY, idU, idV;             //自己创建的纹理对象ID，创建错误返回0
+	uint videoW, videoH;
+	uchar* yuvPtr = nullptr;
 };
 
 #endif // MYGLWIDGET_H
