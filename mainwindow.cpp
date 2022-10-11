@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     {
         auto t = new QTimer(this);
-        auto f = new QFile("E:/workspace/CGLWidgetDemo/yuv/1.yuv", this);
+        auto f = new QFile("./yuv/1.yuv", this);
     
         auto ba = new QByteArray(176 * 144 * 1.5, 0);
 
