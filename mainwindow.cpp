@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
         connect(t, &QTimer::timeout, this, [=]() {
             //
             const int w = 176, h = 144;
-            if (f->read(ba->data(), ba->count()) <= 0) {
+            if (f->read(ba->data(), ba->count()) <= 0) {//定时在f中读取176 * 144 * 1.5个数据到ba中
                 f->seek(0);
                 if (f->read(ba->data(), ba->count()) <= 0) {
                     qDebug("error again");
