@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QTimer>
 #include <QFile>
+#include <qmessagebox.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -49,3 +50,8 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+void MainWindow::on_pushButton_clicked()
+{
+    QMessageBox::information(this, "Tips", "Box");
+}
