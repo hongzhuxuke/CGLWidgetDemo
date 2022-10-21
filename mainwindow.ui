@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>655</width>
-    <height>600</height>
+    <width>1481</width>
+    <height>971</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,24 +17,37 @@
    <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="myGlWidget" name="yuvWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="myGlWidget" name="yuvWidget"/>
+    </item>
+   </layout>
+   <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>150</y>
-      <width>300</width>
-      <height>200</height>
+      <x>310</x>
+      <y>310</y>
+      <width>171</width>
+      <height>421</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/img/leftbdistanceguid.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
    </widget>
+   <zorder>yuvWidget</zorder>
+   <zorder>label</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>655</width>
-     <height>22</height>
+     <width>1481</width>
+     <height>26</height>
     </rect>
    </property>
   </widget>

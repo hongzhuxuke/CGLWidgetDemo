@@ -1,5 +1,7 @@
 #include "myglwidget.h"
 #include <QtDebug>
+#include <QPainter>
+
 #define VERTEXIN 0
 #define TEXTUREIN 1
 
@@ -191,4 +193,17 @@ void myGlWidget::resizeEvent(QResizeEvent* e)
 {
 
 
+}
+
+void myGlWidget::paintEvent(QPaintEvent* e)
+{
+	QPainter painter;
+	//painter.begin(this);
+
+	//QImage img;
+	//img.load("leftbdistanceguid.jpg");
+	//painter.drawImage(QPoint(0, 0), img);
+
+	//painter.end();
+	QOpenGLWidget::paintEvent(e);
 }

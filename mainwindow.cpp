@@ -9,6 +9,14 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    //ui->graphicsView->setViewport(new QOpenGLWidget());
+    //QGraphicsScene* scene = new QGraphicsScene;
+    ////向容器中添加文件路径为fileName（QString类型）的文件
+    //scene->addPixmap(QPixmap("./gqj.jpeg"));
+    //scene->addWidget(ui->yuvWidget);
+    ////借助graphicsView（QGraphicsView类）控件显示容器的内容
+    //ui->graphicsView->setScene(scene);
+
     {
         auto t = new QTimer(this);
         auto f = new QFile("./yuv/1.yuv", this);

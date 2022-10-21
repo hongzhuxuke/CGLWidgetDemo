@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="img">
+    <file>leftbdistanceguid.png</file>
     <file>gqj.jpeg</file>
     <file>bk_login.png</file>
   </qresource>

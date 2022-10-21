@@ -25,8 +25,8 @@ protected:
 	void paintGL();
 	void initializeGL();
 	void resizeEvent(QResizeEvent* e);
-
-
+	//÷ÿ–¥paintEvent∑Ω∑®
+	void paintEvent(QPaintEvent* e);
 private:
 	QOpenGLShaderProgram* program;
 
